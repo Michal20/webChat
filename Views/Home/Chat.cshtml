@@ -1,0 +1,48 @@
+﻿@model Conversation
+@{
+    ViewData["Title"] = "Chat";
+    ViewBag.css = "chat.css";
+
+    Layout = "_LayoutChat";
+}
+ <div class="msg_history">
+     @foreach (var message in Model.Messages)
+     {
+         <div class="incoming_msg">
+            <div class="received_msg">
+                <div class="received_withd_msg">
+                    <p>@message.Text</p>
+                    <span class="time_date"> @message.sendTime</span>
+                </div>
+            </div>
+        </div>
+     }
+</div>
+<!--div class="msg_history" id="Ross_Geller">
+<div class="incoming_msg">
+    <div class="received_msg">
+    <div class="received_withd_msg">
+        <p>check out</p>
+        <span class="time_date"> 08:01 | April 6</span>
+    </div>
+    </div>
+</div>
+<div class="outgoing_msg">
+    <div class="sent_msg">
+    <p>What's up?</p>
+    <span class="time_date"> 14:43 | April 7</span>
+    </div>
+</div>
+</!--div-->
+<div class="type_msg">
+    <form asp-controller="Home" asp-action="CreateMessage" class="input_msg_write">
+        <input type="hidden" name="converId" value="@Model.Id" />
+        <input type="text" name="message" placeholder="Type a message"/>
+        <button class="msg_send_btn" type="submit">
+            <i class="fa fa-fw fa-send"></i>
+        </button>
+    </form>
+</div>
+
+  
+

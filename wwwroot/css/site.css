@@ -1,18 +1,48 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif
 }
 
 body {
-  margin-bottom: 60px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.container {
+    max-width: 550px;
+    margin: 50px auto;
+}
+
+.container .box-register {
+    background-color: rgb(61, 61, 64);
+    max-width: 450px;
+    min-height: 300px;
+    margin: 30px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    cursor: pointer;
+    padding: 1.8rem
+}
+
+.container .box-register .box-title {
+    color: #ddd;
+    text-align: center;
+}
+
+
+
+.container .box-register .have-account {
+    text-align: center;
+    color: #ddd;
+}
+
+
+
+.container .box-register .btn-primary {
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    border-color: #eee;
 }

@@ -1,0 +1,407 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    display: flex;
+    visibility: visible;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    margin: 5px auto;
+    max-width: 1170px;
+}
+
+.blur-filter {
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -o-filter: blur(2px);
+    -ms-filter: blur(2px);
+    filter: blur(2px);
+}
+
+img {
+    max-width: 100%;
+}
+
+.recent {
+    font-size: 20px;
+}
+
+.image-upload > input {
+    display: none;
+}
+
+.video-upload > input {
+    display: none;
+}
+
+.add_chat_user {
+    border: none;
+    float: right;
+    background: rgba(223, 22, 22, 0);
+    color: #212d2b;
+}
+
+.inbox_msg {
+    border: 5px solid rgba(239, 235, 235, 0.5);
+    border-radius: 15px;
+    clear: both;
+    overflow: hidden
+}
+
+.inbox_people {
+    background: #adcee0 none repeat scroll 0 0;
+    float: left;
+    overflow: hidden;
+    width: 40%;
+    border-right: 5px solid rgba(239, 235, 235, 0.5);
+}
+
+.headind_srch {
+    padding: 10px 29px 10px 20px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(239, 235, 235, 0.5);
+}
+
+.recent_heading {
+    float: left;
+    width: 100%;
+}
+
+    .recent_heading span {
+        color: #746ec6;
+        font-size: 21px;
+        margin: auto;
+    }
+
+.chat_list {
+    border: none;
+    border: 2px solid rgba(239, 235, 235, 0.5);
+    margin: 0;
+    padding: 18px 16px 10px;
+    width: 100%;
+    color: #746ec6;
+    background: #adcee0 none repeat scroll 0 0;
+}
+
+#active_chat {
+    background: #544f68;
+    border-bottom: 2px solid rgba(239, 235, 235, 0.5);
+}
+
+.chat_img {
+    float: left;
+    width: 15%;
+}
+
+    .chat_img img {
+        border-radius: 50%;
+        vertical-align: middle;
+        width: 50px;
+        height: 50px;
+    }
+
+.chat_ib {
+    float: left;
+    padding: 0 0 0 15px;
+    width: 85%;
+}
+
+.user_chat_name {
+    float: left;
+    color: #073333;
+    font-size: 18px;
+    margin: 0 0 8px 0;
+}
+
+.user_chat_date {
+    color: #a39597;
+    font-size: 14px;
+    margin: 0 0 8px 0;
+    float: right;
+}
+
+.user_chat_message {
+    color: #29302f;
+    font-size: 14px;
+    margin: auto;
+    float: left;
+}
+
+.chat_ib h5 {
+    color: #f7f3f4;
+}
+
+.chat_ib h5 span {
+    font-size: 13px;
+    float: right;
+}
+
+.chat_ib p {
+    font-size: 14px;
+    color: #29302f;
+    margin: auto
+}
+
+.chat_ib img {
+    float: left;
+    width: 11%;
+}
+
+.chat_people {
+    overflow: hidden;
+    clear: both;
+}
+
+.inbox_chat {
+    height: 550px;
+    overflow-y: scroll;
+}
+
+.mesgs {
+    float: left;
+    padding: 20px 15px 0 20px;
+    width: 60%;
+    position: relative;
+}
+
+#active_user {
+    display: block;
+}
+
+.msg_history {
+    height: 505px;
+    overflow-y: auto;
+}
+
+.incoming_msg_img {
+    display: inline-block;
+    width: 6%;
+}
+
+.received_msg {
+    display: inline-block;
+    padding: 0 0 0 5px;
+    vertical-align: top;
+    width: 92%;
+}
+
+.received_withd_msg p {
+    background: #88d4dc none repeat scroll 0 0;
+    border-radius: 5px;
+    color: #5e13ea;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+}
+
+.time_date {
+    color: #0000002d;
+    display: block;
+    font-size: 12px;
+    margin: 5px 0 0;
+}
+
+.received_withd_msg {
+    width: 57%;
+}
+
+.sent_msg p {
+    background: #7ccab5 none repeat scroll 0 0;
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0;
+    color: rgb(160, 99, 7);
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+}
+
+.sent_msg img {
+    background: #7ccab5 none repeat scroll 0 0;
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0;
+    color: rgb(160, 99, 7);
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+}
+
+.sent_msg video {
+    background: #7ccab5 none repeat scroll 0 0;
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0;
+    color: rgb(160, 99, 7);
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+}
+
+.outgoing_msg {
+    overflow: hidden;
+    margin: 10px 0 10px;
+}
+
+.sent_msg {
+    float: right;
+    width: 56%;
+}
+
+.type_msg {
+    border-top: 1px solid #4412a0;
+    position: relative;
+    visibility: hidden
+}
+
+.input_msg_write input {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: none;
+    color: #4c4c4c;
+    font-size: 15px;
+    min-height: 40px;
+    width: 90%;
+}
+
+.files_msg {
+    visibility: hidden;
+}
+
+.msg_file_btn {
+    background-color: #48474a;
+    border: none;
+}
+
+.add_file_btn {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: aqua;
+    border: none;
+}
+
+.msg_send_btn {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: aqua;
+    border: none;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    width: 50px;
+}
+
+.messaging {
+    padding: 0 0 50px 0;
+}
+
+
+
+/*
+.icon_send{
+  border: none;
+}
+.top_spac{ margin: 20px 0 0;}
+.srch_bar {
+  display: inline-block;
+  text-align: right;
+  width: 60%;
+}
+.srch_bar input{ border:1px solid #d6cf6a; border-width:0 0 1px 0; width:80%; padding:2px 0 4px 6px; background:none;}
+.srch_bar .input-group-addon button {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  padding: 0;
+  color: #707070;
+  font-size: 18px;
+}
+.srch_bar .input-group-addon { margin: 0 0 0 -27px;}*/
+
+.box-modal {
+    visibility: hidden;
+    position: absolute;
+    background-color: #546966;
+    border-radius: 10%;
+    padding: 10px;
+}
+
+.controls button {
+    margin: 20px auto;
+    display: block;
+    outline: none;
+    background-image: linear-gradient(0deg, #366687, #9b59b6);
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border-width: 20px;
+    border-color: white;
+    cursor: pointer;
+}
+
+.controls.on button {
+    background-image: linear-gradient(0deg, #873636, #ec6262);
+}
+
+.controls.off button {
+    background-image: linear-gradient(0deg, #366687, #9b59b6);
+}
+
+.recordings {
+    display: inline;
+}
+
+.recordings audio {
+    float: left;
+    height: 50px;
+}
+
+.recordings button {
+    margin: 0 0 0 5px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    color: #b5d8ed;
+    background-color: #5082a1;
+    border: none;
+}
+
+.box-add {
+    visibility: hidden;
+    position: absolute;
+    background-color: #e0e8e7;
+    border-radius: 5%;
+    padding: 10px;
+    float: left;
+    overflow: hidden;
+    width: 25%;
+    border-right: 5px solid rgba(239, 235, 235, 0.5);
+}
+
+.users_list {
+    height: 400px;
+    overflow-y: scroll;
+}
+
+.user_add_list {
+    border: none;
+    border: 2px solid rgba(239, 235, 235, 0.5);
+    margin: 0;
+    padding: 18px 16px 10px;
+    width: 100%;
+    color: #746ec6;
+    background: #adcee0 none repeat scroll 0 0;
+}

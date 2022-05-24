@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - webChat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/webChat.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/4f00ee1694.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h3 class=" text-center">Chatting in Superchat</h3>
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="inbox_people">
+                    <div class="headind_srch">
+                        <div class="recent_heading">
+                            <span class="fw-bold recent">Recent</span>
+                            <button class="btn btn-primary add_chat_user" id="add_chat_user" type="button">
+                            <i class="fa fa-fw fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="inbox_chat">
+                        <vc:conversation></vc:conversation>
+                    </div>
+                </div>
+                <div class="mesgs">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="box-add" id="create-contact">
+        <form asp-controller="Home" asp-action="AddConversetion" class="add-body">
+            <button type="button" class="close" onclick="closeAddBox()"> X </button>
+            <header>Add Contact</header>
+        
+            <div> 
+                <div class="form-group my-2">
+                    <input name="UserName" type="text" class="form-control" placeholder="Enter username" required/>
+                    <span class="text-danger">@ViewBag.MessageUserName</span>
+                </div>
+                <div class="form-group my-2">
+                    <input name="NickName" type="text" class="form-control" placeholder="Enter nickname" required/>
+                    <span class="text-danger">@ViewBag.MessageNickName</span>
+                </div>
+                <div class="form-group my-2">
+                    <input name="Server" type="text" class="form-control" placeholder="Enter Server" required/>
+                    <span class="text-danger">@ViewBag.MessageServer</span>
+                </div>
+            </div>
+            <footer>
+                <div class="my-3"> 
+                    <input type="submit" value="Add" class="form-control btn btn-primary fw-bold" />
+                 </div>
+            </footer>
+        </form>
+    </div>
+    <script src="~/js/chat.js"></script>
+    @RenderSection("Scripts",false)
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

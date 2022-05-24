@@ -1,0 +1,56 @@
+﻿@model IEnumerable<webChat.Models.User>
+
+@{
+    ViewData["Title"] = "Index";
+    ViewBag.css = "site.css";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NickName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfilePicture)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NickName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>  
+                            <img src="~/images/@item.ProfilePicture"   
+                            class="rounded-circle"   
+                            height="40" width="40"   
+                            asp-append-version="true" />  
+                    </td>
+                    <td>
+                        <a asp-action="Register" >Register</a> |
+                        <a asp-action="Login">log in</a> |
+                    </td>
+                </tr>        
+        }
+    </tbody>
+</table>
