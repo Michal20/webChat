@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace webChat.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         public User() : base()
         {
@@ -20,7 +20,7 @@ namespace webChat.Models
 
         [Required, MinLength(5), Column(TypeName = "VARCHAR(20)")]
         public string NickName { get; set; }
-        
+
         [Required, MinLength(5), DataType(DataType.Password)]
         public string Password { get; set; }
         [Required, Column(TypeName = "VARCHAR(200)")]

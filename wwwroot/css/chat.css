@@ -78,6 +78,16 @@ body {
     width: 100%;
     color: #746ec6;
     background: #adcee0 none repeat scroll 0 0;
+    cursor: pointer;
+    text-transform: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    display: inline-block;
+    align-items: flex-start;
+    border-radius: 0;
+    box-sizing: border-box;
+    writing-mode: horizontal-tb !important;
 }
 
 #active_chat {

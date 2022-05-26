@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webChat.Data;
 
@@ -11,9 +12,10 @@ using webChat.Data;
 namespace webChat.Migrations
 {
     [DbContext(typeof(webChatContext))]
-    partial class webChatContextModelSnapshot : ModelSnapshot
+    [Migration("20220526051756_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,29 +64,26 @@ namespace webChat.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ContactId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConversationContactId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConversationUserId")
                         .HasColumnType("VARCHAR(20)");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("ReceiverId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("sendTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("sent")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

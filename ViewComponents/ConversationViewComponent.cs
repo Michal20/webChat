@@ -1,21 +1,9 @@
 ﻿#nullable disable
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using webChat.Models;
 using webChat.ViewModels;
 using webChat.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Session;
 
 namespace webChat.ViewComponents
 {
@@ -30,8 +18,11 @@ namespace webChat.ViewComponents
 
         public IViewComponentResult Invoke()
         {
+            var userId = HttpContext.Session.GetString("UserName");
+
             var conver = _context.Conversation
-                .Include(x => x.Contact)
+                .Where(x => x.UserId == userId)
+                .OrderBy(x => x.sendTime)
                 .ToList();
             return View(conver);
         }

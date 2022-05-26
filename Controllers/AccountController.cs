@@ -5,17 +5,12 @@ using webChat.Models;
 using webChat.ViewModels;
 using webChat.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO;
-using System.Threading.Tasks;
+
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
+//using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace webChat.Controllers
 {
@@ -27,14 +22,15 @@ namespace webChat.Controllers
         public AccountController(webChatContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
-             webHostEnvironment = hostEnvironment; 
+            webHostEnvironment = hostEnvironment;
         }
 
-        // GET: RegisterUsers
-        public async Task<IActionResult> Index()
+        public IActionResult AccessDenied()
         {
-            return View(await _context.User.ToListAsync());
+            return View();
         }
+
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -46,7 +42,7 @@ namespace webChat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserName,NickName,Password,ConfirmPassword,ProfileImage")] RegisterUser register)
         {
-            if(_context.User.Find(register.UserName) != null)
+            if (_context.User.Find(register.UserName) != null)
             {
                 @ViewBag.Message = "Please select a diffrent username";
                 register.UserName = "";
@@ -55,20 +51,20 @@ namespace webChat.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = UploadedFile(register);
-                User user = new User() { 
+                User user = new User()
+                {
                     Password = register.Password,
                     UserName = register.UserName,
                     NickName = register.NickName,
                     ProfilePicture = uniqueFileName,
                 };
+                Signin(user);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                Signin(user);
-                TempData["userName"] = register.UserName;
-                //HttpContext.Session.SetString("UserName", user.UserName);
+                //TempData["userName"] = register.UserName;
+                HttpContext.Session.SetString("UserName", user.UserName);
                 return RedirectToAction("Index", "Home");
 
-                //return RedirectToAction(nameof(Chat));
             }
             return View(register);
         }
@@ -88,7 +84,9 @@ namespace webChat.Controllers
                 {
                     register.ProfileImage.CopyTo(fileStream);
                 }
-            } else {
+            }
+            else
+            {
 
                 uniqueFileName = "avatar.png";
             }
@@ -96,7 +94,7 @@ namespace webChat.Controllers
         }
 
 
-      
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -107,17 +105,21 @@ namespace webChat.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login([Bind("UserName,Password")] LoginUser login)
         {
-
-            if (_context.User.Any(x => (x.UserName == login.UserName & x.Password == login.Password)))
+            if (ModelState.IsValid)
             {
-                //HttpContext.Session.SetString("UserName", login.UserName);
-                Signin(GetUser(login.UserName));
-                //HttpContext.Session.SetString("UserName", user.UserName);
-                TempData["userName"] = login.UserName;
-                return RedirectToAction("Index", "Home");
-                //return RedirectToAction(nameof(Index));
+                if (_context.User.Any(x => (x.UserName == login.UserName & x.Password == login.Password)))
+                {
+                    Signin(GetUser(login.UserName));
+                    //TempData["userName"] = login.UserName;
+                    HttpContext.Session.SetString("UserName", login.UserName);
+                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction(nameof(Index));
+                } else
+                {
+                    ViewBag.Message = "Username and/or password are incorrect";
+                }
             }
-            ViewBag.Message = "Username and/or password are incorrect";
+
             return View(login);
         }
 
@@ -125,12 +127,11 @@ namespace webChat.Controllers
         {
             return _context.User.Find(UserName);
         }
-
         private async void Signin(User user)
         {
             var claims = new List<Claim>
             {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserName),
+                    new Claim(ClaimTypes.Name, user.UserName),
             };
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -144,6 +145,11 @@ namespace webChat.Controllers
                 authProperties);
         }
 
+        public void Logout()
+        {
+            HttpContext.SignOutAsync();
+        }
+
     }
-    
+
 }

@@ -13,11 +13,15 @@ namespace webChat.Models
         {
             Messages = new List<Message>();
         }
-        public int Id { get; set; }
-        [Required, MinLength(5), Column(TypeName = "VARCHAR(20)")]
-        public string Name { get; set; }
+        [Key]
+        public string UserId { get; set; }
+        [Key]
         public string ContactId { get; set; }
-        public User Contact { get; set; }
+        public string Name { get; set; }
+        public string Server { get; set; }
+        public string Text { get; set; }
+        public string ProfilePicture { get; set; }
+        public DateTime sendTime { get; set; }
         public ICollection<Message> Messages { get; set; }
 
     }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using webChat.ViewModels;
 using webChat.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace webChat.Data
 {
@@ -20,5 +19,18 @@ namespace webChat.Data
         public DbSet<Message> Message { get; set; }
         public DbSet<Conversation> Conversation { get; set; }
 
+        /*protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<ChatUser>()
+               .HasKey(x => new { x.ChatId, x.UserId });
+        }*/
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Conversation>()
+                .HasKey(x => new { x.UserId, x.ContactId });
+        }
     }
 }

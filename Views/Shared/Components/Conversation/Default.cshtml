@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<Conversation>
-
-@foreach(var conv in Model){
-    <button class="chat_list"  onclick= "chatWith(this, @conv.Id)">
-        <div class="chat_people">
-            <span class="chat_img">
-                <img src="~/images/@conv.Contact.ProfilePicture">
-            </span>
-            <span class="chat_ib">
-                <span class="fw-bold user_chat_name">@conv.Name</span>
-                <span class="user_chat_date">time</span>
-                <br>
-                <p class="user_chat_message">message</p>
-            </span>
-        </div>
-    </button>
-}
-
+<div class="inbox_chat">
+    @foreach(var conv in Model){
+        <a class="chat_list contact-@conv.ContactId" data-contact-id="@conv.ContactId">
+            <div class="chat_people">
+                <span class="chat_img">
+                    <img src="~/images/@conv.ProfilePicture">
+                </span>
+                <span class="chat_ib">
+                    <span class="fw-bold user_chat_name">@conv.Name</span>
+                    <span class="user_chat_date">@conv.sendTime</span>
+                    <br>
+                    <p class="user_chat_message">@conv.Text</p>
+                </span>
+            </div>
+        </a>
+    }
+</div>

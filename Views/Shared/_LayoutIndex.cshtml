@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/webChat.styles.css" asp-append-version="true" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
     <script src="https://kit.fontawesome.com/4f00ee1694.js" crossorigin="anonymous"></script>
 
 </head>
@@ -17,20 +16,8 @@
         <h3 class=" text-center">Chatting in Superchat</h3>
         <div class="messaging">
             <div class="inbox_msg">
-                <div class="inbox_people">
-                    <div class="headind_srch">
-                        <div class="recent_heading">
-                            <span class="fw-bold recent">Recent</span>
-                            <button class="btn btn-primary add_chat_user" id="add_chat_user" type="button">
-                            <i class="fa fa-fw fa-user-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <vc:conversation></vc:conversation> 
-                </div>
-                <div class="mesgs">
-                    @RenderBody()
-                </div>
+                @RenderBody()
+                
             </div>
         </div>
     </div>
@@ -62,7 +49,8 @@
             </footer>
         </form>
     </div>
-    <script src="~/js/chat.js" asp-append-version="true"></script>
+    <script src="~/js/chat.js"></script>
+    @RenderSection("Scripts",false)
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

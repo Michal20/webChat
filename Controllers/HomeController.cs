@@ -18,64 +18,67 @@ namespace WebChat.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddConversetion(string UserName, string NickName, string Server)
-        {
 
-            if (ModelState.IsValid && _context.User.Find(UserName) != null)
+        [HttpPost]
+        public async Task<IActionResult> AddConversetion(string UserName, string NickName, string server)
+        {
+            if (_context.User.Find(UserName) != null)
             {
+                var userId = HttpContext.Session.GetString("UserName");
                 Conversation conver = new Conversation()
                 {
-                    Name = NickName,
                     ContactId = UserName,
-                    //Contact = _context.User.Find(UserName),
-                    //Image = _context.User.Find(UserName).ProfilePicture
-                    //User.Identity.Name
+                    UserId = userId,
+                    Name = NickName,
+                    Server = server,
+                    Text = "",
+                    sendTime = DateTime.Now,
+                    ProfilePicture = _context.User.Find(userId).ProfilePicture,
                 };
-                //string username = User.Identity.Name;
                 _context.Conversation.Add(conver);
-                var userName = TempData["userName"];
-                if(userName != null)
-                {
-                    User user = _context.User.Find(userName);
-                    user.Conversations.Add(conver);
-                }
                 await _context.SaveChangesAsync();
-                //HttpContext.Session.SetString("UserName", user.UserName);
-                return RedirectToAction("Chat", new {id = conver.Id});
+
+                return RedirectToAction("Chat", "Home", new { id = conver.ContactId });
             }
-            return RedirectToAction("Index");
+            else
+            {
+                @ViewBag.MessageUserName = "Username are incorrect";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult Chat(int id)
+        public IActionResult Chat(string id)
         {
-            var userName = TempData["userName"];
-            User user = _context.User.Find(userName);
-
+            var userName = HttpContext.Session.GetString("UserName");
+            ViewBag.UserName = userName;
             var conver = _context.Conversation
                 .Include(x => x.Messages)
-                .FirstOrDefault(x => x.Id == id);
-             return View(conver);
+                .FirstOrDefault(x => x.UserId == userName && x.ContactId == id);
+            return View(conver);
         }
-
         [HttpPost]
-        public async Task<IActionResult> CreateMessage(int converId, string message)
+        public async Task<IActionResult> CreateMessage(string contactId, string message)
         {
+            var userName = HttpContext.Session.GetString("UserName");
+
             var Message = new Message
             {
-                ConverId = converId,
+                UserId = userName,
+                ContactId = contactId,
                 Text = message,
-                sendTime = DateTime.Now
-
+                sendTime = DateTime.Now,
+                sent = true,
             };
+            var conver = _context.Conversation.Find(userName, contactId);
+            conver.Text = message;
+            conver.sendTime = DateTime.Now;
+            conver.Messages.Add(Message);
             _context.Message.Add(Message);
             await _context.SaveChangesAsync();
 
-
-            return RedirectToAction("Chat", new {id = converId});
+            return RedirectToAction("Chat", "Home", new { id = contactId });
         }
-
 
         public IActionResult Index()
         {

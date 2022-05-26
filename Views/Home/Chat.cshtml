@@ -5,18 +5,31 @@
 
     Layout = "_LayoutChat";
 }
+
  <div class="msg_history">
      @foreach (var message in Model.Messages)
      {
-         <div class="incoming_msg">
-            <div class="received_msg">
-                <div class="received_withd_msg">
+        @if(@message.sent)
+        {
+            <div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p>@message.Text</p>
+                        <span class="time_date"> @message.sendTime</span>
+                    </div>
+                </div>
+            </div>
+        } else
+        {
+            <div class="outgoing_msg">
+                <div class="sent_msg">
                     <p>@message.Text</p>
                     <span class="time_date"> @message.sendTime</span>
                 </div>
             </div>
-        </div>
-     }
+        }
+
+    }
 </div>
 <!--div class="msg_history" id="Ross_Geller">
 <div class="incoming_msg">
@@ -36,13 +49,11 @@
 </!--div-->
 <div class="type_msg">
     <form asp-controller="Home" asp-action="CreateMessage" class="input_msg_write">
-        <input type="hidden" name="converId" value="@Model.Id" />
+        <input type="hidden" name="contactId" value="@Model.ContactId" />
         <input type="text" name="message" placeholder="Type a message"/>
         <button class="msg_send_btn" type="submit">
             <i class="fa fa-fw fa-send"></i>
         </button>
     </form>
 </div>
-
-  
 
