@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<Conversation>
 <div class="inbox_chat">
     @foreach(var conv in Model){
-        <a class="chat_list contact-@conv.ContactId" data-contact-id="@conv.ContactId">
+        <a class="chat_list contact-@conv.id" data-contact-id="@conv.id">
             <div class="chat_people">
                 <span class="chat_img">
                     <img src="~/images/@conv.ProfilePicture">
                 </span>
                 <span class="chat_ib">
-                    <span class="fw-bold user_chat_name">@conv.Name</span>
-                    <span class="user_chat_date">@conv.sendTime</span>
+                    <span class="fw-bold user_chat_name">@conv.name</span>
+                    <span class="user_chat_date">@conv.lastdate</span>
                     <br>
-                    <p class="user_chat_message">@conv.Text</p>
+                    <p class="user_chat_message">@conv.last</p>
                 </span>
             </div>
         </a>

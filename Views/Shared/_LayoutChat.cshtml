@@ -37,21 +37,21 @@
     
 
     <div class="box-add" id="create-contact">
-        <form asp-controller="Home" asp-action="AddConversetion" class="add-body">
+        <form id="add-body-form" class="add-body">
             <button type="button" class="close" onclick="closeAddBox()"> X </button>
             <header>Add Contact</header>
         
             <div> 
                 <div class="form-group my-2">
-                    <input name="UserName" type="text" class="form-control" placeholder="Enter username" required/>
+                    <input id="addUserName" name="UserName" type="text" class="form-control" placeholder="Enter username" required/>
                     <span class="text-danger">@ViewBag.MessageUserName</span>
                 </div>
                 <div class="form-group my-2">
-                    <input name="NickName" type="text" class="form-control" placeholder="Enter nickname" required/>
+                    <input id="addNickName" name="NickName" type="text" class="form-control" placeholder="Enter nickname" required/>
                     <span class="text-danger">@ViewBag.MessageNickName</span>
                 </div>
                 <div class="form-group my-2">
-                    <input name="Server" type="text" class="form-control" placeholder="Enter Server" required/>
+                    <input id="addServer" name="Server" type="text" class="form-control" placeholder="Enter Server" required/>
                     <span class="text-danger">@ViewBag.MessageServer</span>
                 </div>
             </div>

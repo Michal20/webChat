@@ -42,16 +42,16 @@ namespace webChat.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "VARCHAR(20)", nullable: false),
-                    ContactId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Server = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    sendTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    server = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    last = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    lastdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Conversation", x => new { x.UserId, x.ContactId });
+                    table.PrimaryKey("PK_Conversation", x => new { x.UserId, x.id });
                     table.ForeignKey(
                         name: "FK_Conversation_User_UserId",
                         column: x => x.UserId,
@@ -66,27 +66,26 @@ namespace webChat.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReceiverId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    sendTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ConversationContactId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ConversationUserId = table.Column<string>(type: "VARCHAR(20)", nullable: true)
+                    sent = table.Column<bool>(type: "bit", nullable: false),
+                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ConversationUserId = table.Column<string>(type: "VARCHAR(20)", nullable: true),
+                    Conversationid = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Message", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_Conversation_ConversationUserId_ConversationContactId",
-                        columns: x => new { x.ConversationUserId, x.ConversationContactId },
+                        name: "FK_Message_Conversation_ConversationUserId_Conversationid",
+                        columns: x => new { x.ConversationUserId, x.Conversationid },
                         principalTable: "Conversation",
-                        principalColumns: new[] { "UserId", "ContactId" });
+                        principalColumns: new[] { "UserId", "id" });
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ConversationUserId_ConversationContactId",
+                name: "IX_Message_ConversationUserId_Conversationid",
                 table: "Message",
-                columns: new[] { "ConversationUserId", "ConversationContactId" });
+                columns: new[] { "ConversationUserId", "Conversationid" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -8,7 +8,13 @@ using webChat.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<webChatContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("webChatContext") ?? throw new InvalidOperationException("Connection string 'webChatContext' not found.")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("webChatContext"),// ?? throw new InvalidOperationException("Connection string 'webChatContext' not found.")),
+    sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure();
+    });
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession(options =>
@@ -17,13 +23,13 @@ builder.Services.AddSession(options =>
     //options.Cookie.HttpOnly = true;
     //options.Cookie.IsEssential = true;
 });
-//builder.Services.AddMvc();
+builder.Services.AddMvc();
 
 
 
 //builder.Services.AddDistributedMemoryCache();
-
-//builder.Services.AddRazorPages();
+//
+builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -54,10 +60,11 @@ app.UseSession();
 app.UseAuthentication();
 
 app.UseAuthorization();
+//
 
-//app.MapRazorPages();
-
-//app.UseStatusCodePages();
+app.MapRazorPages();
+//
+app.UseStatusCodePages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}");

@@ -16,12 +16,12 @@ namespace webChat.Models
         [Key]
         public string UserId { get; set; }
         [Key]
-        public string ContactId { get; set; }
-        public string Name { get; set; }
-        public string Server { get; set; }
-        public string Text { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string server { get; set; }
+        public string last { get; set; }
+        public DateTime lastdate { get; set; }
         public string ProfilePicture { get; set; }
-        public DateTime sendTime { get; set; }
         public ICollection<Message> Messages { get; set; }
 
     }

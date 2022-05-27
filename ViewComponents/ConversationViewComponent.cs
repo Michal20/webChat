@@ -22,7 +22,7 @@ namespace webChat.ViewComponents
 
             var conver = _context.Conversation
                 .Where(x => x.UserId == userId)
-                .OrderBy(x => x.sendTime)
+                .OrderByDescending(x => x.lastdate)
                 .ToList();
             return View(conver);
         }

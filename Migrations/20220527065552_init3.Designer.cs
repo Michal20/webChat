@@ -12,8 +12,8 @@ using webChat.Data;
 namespace webChat.Migrations
 {
     [DbContext(typeof(webChatContext))]
-    [Migration("20220526051756_init")]
-    partial class init
+    [Migration("20220527065552_init3")]
+    partial class init3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,29 +29,29 @@ namespace webChat.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("VARCHAR(20)");
 
-                    b.Property<string>("ContactId")
+                    b.Property<string>("id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicture")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Server")
+                    b.Property<string>("last")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("sendTime")
+                    b.Property<DateTime>("lastdate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "ContactId");
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("server")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "id");
 
                     b.ToTable("Conversation");
                 });
@@ -64,30 +64,25 @@ namespace webChat.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ConversationContactId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ConversationUserId")
                         .HasColumnType("VARCHAR(20)");
 
-                    b.Property<string>("ReceiverId")
+                    b.Property<string>("Conversationid")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("sendTime")
+                    b.Property<DateTime>("created")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("sent")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConversationUserId", "ConversationContactId");
+                    b.HasIndex("ConversationUserId", "Conversationid");
 
                     b.ToTable("Message");
                 });
@@ -169,7 +164,7 @@ namespace webChat.Migrations
                 {
                     b.HasOne("webChat.Models.Conversation", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ConversationUserId", "ConversationContactId");
+                        .HasForeignKey("ConversationUserId", "Conversationid");
                 });
 
             modelBuilder.Entity("webChat.Models.Conversation", b =>

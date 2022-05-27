@@ -129,6 +129,8 @@ namespace webChat.Controllers
         }
         private async void Signin(User user)
         {
+            ViewBag.UserName = user.UserName;
+
             var claims = new List<Claim>
             {
                     new Claim(ClaimTypes.Name, user.UserName),

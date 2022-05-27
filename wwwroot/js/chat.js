@@ -15,7 +15,6 @@ addContactBtn.addEventListener('click', function () {
 let id_active_contact = null;
 
 $('.chat_list').click(function (e) {
-    console.log("enter\n");
     e.preventDefault();
     if (id_active_contact != null) {
         $('.chat_list#active_chat').removeAttr("id");;
@@ -25,7 +24,37 @@ $('.chat_list').click(function (e) {
     window.location.href = '/' + id_active_contact;
         //'@Url.Action("Chat", "Home", new {id = "ID"})'.replace("ID", id_active_contact);
 
-});ghjh
+});
+
+$('#add-body-form').submit(async function (e) {
+    e.preventDefault();
+    const contactid = $('#addUserName').val();
+    const Name = $('#addNickName').val();
+    const Server = $('#addServer').val();
+    const userId = '@ViewBag.UserName';
+    const localServer = "localhost:5005";
+    const r1 = await fetch('http://localhost:5005/api/contacts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: contactid, name: Name, server: Server })
+    });
+    /*
+    const r2 = await fetch('http://localhost:5005/api/invitations', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ from: userId, to: contactid, server: localServer })
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });;
+    */
+    
+    window.location.href = '/' + contactid;
+});
 let newSensMsg =
     `<div class="incoming_msg">
         <div class="received_msg">

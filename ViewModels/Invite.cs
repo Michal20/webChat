@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace webChat.ViewModels
 {
-    public class ContactUser
+    public class Invite
     {
-        [Required, MinLength(5), Column(TypeName = "VARCHAR(20)")]
-        public string UserName { get; set; }
-
-        [Required, MinLength(5), Column(TypeName = "VARCHAR(20)")]
-        public string NickName { get; set; }
         [Required]
-        public string Server { get; set; }
+        public string from { get; set; }
+        [Required]
+        public string to { get; set; }
+        [Required]
+        public string server { get; set; }
     }
 }

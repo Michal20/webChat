@@ -16,21 +16,16 @@ namespace webChat.Data
         }
 
         public DbSet<User> User { get; set; }
-        public DbSet<Message> Message { get; set; }
+        //public DbSet<Message> Message { get; set; }
         public DbSet<Conversation> Conversation { get; set; }
 
-        /*protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            builder.Entity<ChatUser>()
-               .HasKey(x => new { x.ChatId, x.UserId });
-        }*/
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<Conversation>()
-                .HasKey(x => new { x.UserId, x.ContactId });
+                .HasKey(x => new { x.UserId, x.id });
         }
     }
 }

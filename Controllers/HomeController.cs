@@ -20,25 +20,25 @@ namespace WebChat.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddConversetion(string UserName, string NickName, string server)
+        public async Task<IActionResult> AddConversetion( string UserName, string NickName, string server)
         {
             if (_context.User.Find(UserName) != null)
             {
                 var userId = HttpContext.Session.GetString("UserName");
                 Conversation conver = new Conversation()
                 {
-                    ContactId = UserName,
+                    id = UserName,
                     UserId = userId,
-                    Name = NickName,
-                    Server = server,
-                    Text = "",
-                    sendTime = DateTime.Now,
                     ProfilePicture = _context.User.Find(userId).ProfilePicture,
+                    name = NickName,
+                    server = server,
+                    last = "",
+                    lastdate = DateTime.Now,
                 };
                 _context.Conversation.Add(conver);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Chat", "Home", new { id = conver.ContactId });
+                return RedirectToAction("Chat", "Home", new { id = conver.id });
             }
             else
             {
@@ -54,7 +54,7 @@ namespace WebChat.Controllers
             ViewBag.UserName = userName;
             var conver = _context.Conversation
                 .Include(x => x.Messages)
-                .FirstOrDefault(x => x.UserId == userName && x.ContactId == id);
+                .FirstOrDefault(x => x.UserId == userName && x.id == id);
             return View(conver);
         }
         [HttpPost]
@@ -64,17 +64,18 @@ namespace WebChat.Controllers
 
             var Message = new Message
             {
-                UserId = userName,
-                ContactId = contactId,
-                Text = message,
-                sendTime = DateTime.Now,
+                content = message,
+                created = DateTime.Now,
                 sent = true,
             };
-            var conver = _context.Conversation.Find(userName, contactId);
-            conver.Text = message;
-            conver.sendTime = DateTime.Now;
+                
+            var conver = _context.Conversation
+                .Include(x => x.Messages)
+                 .FirstOrDefault(x => x.UserId == userName && x.id == contactId);
+            conver.last = message;
+            conver.lastdate = DateTime.Now;
             conver.Messages.Add(Message);
-            _context.Message.Add(Message);
+            //_context.Message.Add(Message);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Chat", "Home", new { id = contactId });
