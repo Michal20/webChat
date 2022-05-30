@@ -7,7 +7,7 @@ using webChat.ViewModels;
 
 namespace webChat.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class contactsController : Controller
@@ -18,7 +18,6 @@ namespace webChat.Controllers
         {
             _context = context;
         }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -51,9 +50,11 @@ namespace webChat.Controllers
                     };
                     _context.Conversation.Add(conver);
                     await _context.SaveChangesAsync();
-                    return Json(conver);
+                    return Ok();
+                        //Json(conver);
                 }
-                return Json(contact);
+                return Ok();
+                    //Json(contact);
 
 
             }
@@ -134,36 +135,35 @@ namespace webChat.Controllers
             }
             var messages = conver.Messages.ToList();
              
-            /*var messages = await contact.Messages.
-                .Message
-                .Where(x => x.ContactId == id && x.UserId == userName)
-                .ToListAsync();*/
+            
             return Json(messages);
         }
         //our user send mesage to they user
         [HttpPost("{id}/messages")]
-        public async void PostMessages(string? id, string content)
+        public async Task<IActionResult> PostMessages(string? id, [FromBody][Bind("content")] Content con)
         {
-            if (id != null)
+            if (id != null && ModelState.IsValid)
             {
                 var userName = HttpContext.Session.GetString("UserName");
 
                 var Message = new Message
                 {
-                    content = content,
+                    content = con.content,
                     created = DateTime.Now,
                     sent = true,
                 };
-
                 Conversation conver = _context.Conversation
                     .Include(x => x.Messages)
                     .FirstOrDefault(x => x.UserId == userName && x.id == id);
-                conver.last = content;
+                conver.last = con.content;
                 conver.lastdate = DateTime.Now;
                 conver.Messages.Add(Message);
                 //_context.Message.Add(Message);
                 await _context.SaveChangesAsync();
+                return Ok();
             }
+            return BadRequest("Not Valid");
+
         }
 
         [HttpGet("{id}/messages/{id2}")]
@@ -228,71 +228,83 @@ namespace webChat.Controllers
                 }
             }
         }
-
-        /*
-        [HttpPost("/invitations")]
-        public async Task<IActionResult> Invitations([Bind("from", "to", "server")] Invite inv)
+        //[AllowAnonymous]
+        [HttpPost("~/api/invitations")]
+        public async Task<IActionResult> Invitations([FromBody][Bind("from", "to", "server")] Invite inv)
         {
             if(ModelState.IsValid)
             {
-                //var userName = HttpContext.Session.GetString("UserName");
-                var contact = await _context.User
-                .FirstOrDefaultAsync(x => x.UserName == inv.from);
-                string image;
-                if (contact != null)
+                var user = await _context.User
+                .FirstOrDefaultAsync(x => x.UserName == inv.to);
+                if (user != null)
                 {
-                    image = contact.ProfilePicture;
-                }
-                else
-                {
-                    image = "avatar.png";
+                    //inv.from = ViewBag.UserName;
+                    //var userName = HttpContext.Session.GetString("UserName");
+                    var contact = await _context.User
+                    .FirstOrDefaultAsync(x => x.UserName == inv.from);
+                    string image;
+                    if (contact != null)
+                    {
+                        image = contact.ProfilePicture;
+                    }
+                    else
+                    {
+                        image = "avatar.png";
 
-                }
-                Conversation conver = new Conversation()
-                {
-                    id = inv.from,
-                    UserId = inv.to,
-                    name = inv.from,
-                    server = inv.server,
-                    last = "",
-                    lastdate = DateTime.Now,
-                    ProfilePicture = image,
+                    }
+                    //return NoContent();
+                    Conversation conver = new Conversation()
+                    {
+                        id = inv.from,
+                        UserId = inv.to,
+                        name = inv.from,
+                        server = inv.server,
+                        last = "",
+                        lastdate = DateTime.Now,
+                        ProfilePicture = image,
 
-                };
-                _context.Conversation.Add(conver);
-                await _context.SaveChangesAsync();
-                return Json(conver);
+                    };
+                    _context.Conversation.Add(conver);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                        //Json(conver);
+                }
+                //@ViewBag.MessageUserName = "UserName do not exist";
+                return BadRequest("UserName taken");
+
             }
-            return NotFound();
-        }*/
-
-        [HttpPost("transfer")]
-        public async void Transfer(string from, string to, string content)
+            @ViewBag.MessageUserName = "user name error";
+            return BadRequest("Not Valid");
+            //return NotFound();
+        }
+        [HttpPost("~/api/transfer")]
+        public async Task<IActionResult> Transfer([FromBody][Bind("from", "to", "content")] AddMessage mes)
         {
-            if (from != null && to != null && content != null)
+            if (ModelState.IsValid)
             {
 
                 var Message = new Message
                 {
-                    content = content,
+                    content = mes.content,
                     created = DateTime.Now,
-                    sent = true,
+                    sent = false
                 };
 
                 Conversation conver = _context.Conversation
                     .Include(x => x.Messages)
-                    .FirstOrDefault(x => x.UserId == to && x.id == from);
+                    .FirstOrDefault(x => x.UserId == mes.to && x.id == mes.from);
                 if (conver != null)
                 {
-                    conver.last = content;
+                    conver.last = mes.content;
                     conver.lastdate = DateTime.Now;
                     conver.Messages.Add(Message);
                     //_context.Message.Add(Message);
                     await _context.SaveChangesAsync();
+                    return Ok();
                 }
 
             }
-
+            return BadRequest("UserName taken");
         }
     }
 }

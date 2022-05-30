@@ -51,6 +51,7 @@ namespace WebChat.Controllers
         public IActionResult Chat(string id)
         {
             var userName = HttpContext.Session.GetString("UserName");
+            TempData["UserName"] = userName;
             ViewBag.UserName = userName;
             var conver = _context.Conversation
                 .Include(x => x.Messages)
@@ -83,6 +84,9 @@ namespace WebChat.Controllers
 
         public IActionResult Index()
         {
+            var userName = HttpContext.Session.GetString("UserName");
+            ViewBag.UserName = userName;
+            //TempData["UserName"] = userName;
             return View();
         }
 

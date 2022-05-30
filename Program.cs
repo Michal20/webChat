@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using webChat.Data;
 using webChat.Models;
+using Microsoft.AspNetCore.SignalR;
+using webChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<webChatContext>(options =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(15);
@@ -49,6 +52,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+/*else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}*/
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -69,4 +77,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}");
 
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/ChatHub");
+});
 app.Run();

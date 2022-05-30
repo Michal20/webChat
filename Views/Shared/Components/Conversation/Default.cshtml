@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Conversation>
 <div class="inbox_chat">
     @foreach(var conv in Model){
-        <a class="chat_list contact-@conv.id" data-contact-id="@conv.id">
+        <a class="chat_list contact-@conv.id" data-contact-id="@conv.id" data-user-id="@conv.UserId" data-contact-server="@conv.server" >
             <div class="chat_people">
                 <span class="chat_img">
                     <img src="~/images/@conv.ProfilePicture">

@@ -9,17 +9,20 @@ using Microsoft.AspNetCore.Http;
 
 namespace webChat.ViewModels
 {
-    public class AddContact
+    public class AddMessage
     {
         [Required]
-        public string id { get; set; }
+        public string from { get; set; }
 
         [Required]
-        public string name { get; set; }
+        public string to { get; set; }
         [Required]
-        public string server { get; set; }
+        public string content { get; set; }
 
     }
-
-    
+    public class Content
+    {
+        [Required]
+        public string content { get; set; }
+    }
 }

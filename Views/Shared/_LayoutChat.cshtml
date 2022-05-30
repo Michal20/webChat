@@ -40,8 +40,9 @@
         <form id="add-body-form" class="add-body">
             <button type="button" class="close" onclick="closeAddBox()"> X </button>
             <header>Add Contact</header>
-        
+            <span id="ErrorMessage"></span>
             <div> 
+                <input type="hidden" id="useridfrom" value="@ViewBag.UserName" />
                 <div class="form-group my-2">
                     <input id="addUserName" name="UserName" type="text" class="form-control" placeholder="Enter username" required/>
                     <span class="text-danger">@ViewBag.MessageUserName</span>
@@ -62,11 +63,10 @@
             </footer>
         </form>
     </div>
-    <script src="~/js/chat.js" asp-append-version="true"></script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/index.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

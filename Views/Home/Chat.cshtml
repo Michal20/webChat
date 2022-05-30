@@ -9,7 +9,7 @@
  <div class="msg_history">
      @foreach (var message in Model.Messages)
      {
-        @if(@message.sent)
+        @if(!@message.sent)
         {
             <div class="incoming_msg">
                 <div class="received_msg">
@@ -48,12 +48,18 @@
 </div>
 </!--div-->
 <div class="type_msg">
-    <form asp-controller="Home" asp-action="CreateMessage" class="input_msg_write">
-        <input type="hidden" name="contactId" value="@Model.id" />
-        <input type="text" name="message" placeholder="Type a message"/>
+    <form id="create_message" class="input_msg_write">
+        <input type="hidden" id="contactMessageid" name="contactId" value="@Model.id" />
+        <input type="hidden" id="contactServer" value="@Model.server" />
+        <input type="hidden" id="userMessageid" value="@ViewBag.UserName" />
+
+        <input type="text" id="messageContent" name="message" placeholder="Type a message"/>
         <button class="msg_send_btn" type="submit">
             <i class="fa fa-fw fa-send"></i>
         </button>
     </form>
 </div>
-
+@section Scripts{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+}

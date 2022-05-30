@@ -111,6 +111,8 @@ namespace webChat.Controllers
                 {
                     Signin(GetUser(login.UserName));
                     //TempData["userName"] = login.UserName;
+                    ViewBag.UserName = login.UserName;
+                    TempData["UserName"] = login.UserName;
                     HttpContext.Session.SetString("UserName", login.UserName);
                     return RedirectToAction("Index", "Home");
                     //return RedirectToAction(nameof(Index));
