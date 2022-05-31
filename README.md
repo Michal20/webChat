@@ -1,6 +1,7 @@
 for the database run in PM:
 1. add-migration name
 2. update-database
+
 To start the program build and open one of the following files:
 for Register:
 1. http://localhost:5005/
