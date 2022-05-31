@@ -7,7 +7,7 @@ using webChat.ViewModels;
 
 namespace webChat.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class contactsController : Controller
@@ -44,7 +44,7 @@ namespace webChat.Controllers
                         UserId = userName,
                         name = con.name,
                         server = con.server,
-                        last = "",
+                        last = null,
                         lastdate = DateTime.Now,
                         ProfilePicture = user.ProfilePicture,
                     };
@@ -155,7 +155,15 @@ namespace webChat.Controllers
                 Conversation conver = _context.Conversation
                     .Include(x => x.Messages)
                     .FirstOrDefault(x => x.UserId == userName && x.id == id);
-                conver.last = con.content;
+                string last;
+                if(con.content.Length > 45)
+                {
+                    last = con.content.Substring(0, 45);
+                } else
+                {
+                    last = con.content;
+                }
+                conver.last = last;
                 conver.lastdate = DateTime.Now;
                 conver.Messages.Add(Message);
                 //_context.Message.Add(Message);
@@ -228,55 +236,60 @@ namespace webChat.Controllers
                 }
             }
         }
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost("~/api/invitations")]
         public async Task<IActionResult> Invitations([FromBody][Bind("from", "to", "server")] Invite inv)
         {
             if(ModelState.IsValid)
             {
+                if(inv.from == inv.to)
+                {
+                    return BadRequest("Not Valid");
+                }
                 var user = await _context.User
                 .FirstOrDefaultAsync(x => x.UserName == inv.to);
                 if (user != null)
                 {
-                    //inv.from = ViewBag.UserName;
-                    //var userName = HttpContext.Session.GetString("UserName");
-                    var contact = await _context.User
-                    .FirstOrDefaultAsync(x => x.UserName == inv.from);
-                    string image;
-                    if (contact != null)
+                    var contact = await _context.Conversation
+                    .FirstOrDefaultAsync(x => x.id == inv.from && x.UserId == inv.to);
+                    if(contact == null)
                     {
-                        image = contact.ProfilePicture;
-                    }
-                    else
-                    {
-                        image = "avatar.png";
+                        var usercon = await _context.User
+                        .FirstOrDefaultAsync(x => x.UserName == inv.from);
+                        string image;
+                        string name;
+                        if (usercon != null)
+                        {
+                            image = usercon.ProfilePicture;
+                            name = usercon.NickName;
+                        }
+                        else
+                        {
+                            image = "avatar.png";
+                            name = inv.from;
+                        }
+                        //return NoContent();
+                        Conversation conver = new Conversation()
+                        {
+                            id = inv.from,
+                            UserId = inv.to,
+                            name = name,
+                            server = inv.server,
+                            last = null,
+                            lastdate = DateTime.Now,
+                            ProfilePicture = image,
 
+                        };
+                        _context.Conversation.Add(conver);
+                        await _context.SaveChangesAsync();
                     }
-                    //return NoContent();
-                    Conversation conver = new Conversation()
-                    {
-                        id = inv.from,
-                        UserId = inv.to,
-                        name = inv.from,
-                        server = inv.server,
-                        last = "",
-                        lastdate = DateTime.Now,
-                        ProfilePicture = image,
-
-                    };
-                    _context.Conversation.Add(conver);
-                    await _context.SaveChangesAsync();
                     return Ok();
-                        //Json(conver);
                 }
-                //@ViewBag.MessageUserName = "UserName do not exist";
-                return BadRequest("UserName taken");
-
             }
-            @ViewBag.MessageUserName = "user name error";
             return BadRequest("Not Valid");
-            //return NotFound();
         }
+
+        [AllowAnonymous]
         [HttpPost("~/api/transfer")]
         public async Task<IActionResult> Transfer([FromBody][Bind("from", "to", "content")] AddMessage mes)
         {
@@ -295,16 +308,24 @@ namespace webChat.Controllers
                     .FirstOrDefault(x => x.UserId == mes.to && x.id == mes.from);
                 if (conver != null)
                 {
-                    conver.last = mes.content;
+                    string last;
+                    if (mes.content.Length > 45)
+                    {
+                        last = mes.content.Substring(0, 45);
+                    }
+                    else
+                    {
+                        last = mes.content;
+                    }
+                    conver.last = last;
                     conver.lastdate = DateTime.Now;
                     conver.Messages.Add(Message);
-                    //_context.Message.Add(Message);
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
 
             }
-            return BadRequest("UserName taken");
+            return BadRequest();
         }
     }
 }

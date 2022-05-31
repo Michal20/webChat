@@ -3112,4 +3112,3 @@ if (!Uint8Array.prototype.forEach) {
 /******/ })()
 ;
 });
-//# sourceMappingURL=signalr.js.map

@@ -110,12 +110,10 @@ namespace webChat.Controllers
                 if (_context.User.Any(x => (x.UserName == login.UserName & x.Password == login.Password)))
                 {
                     Signin(GetUser(login.UserName));
-                    //TempData["userName"] = login.UserName;
                     ViewBag.UserName = login.UserName;
                     TempData["UserName"] = login.UserName;
                     HttpContext.Session.SetString("UserName", login.UserName);
                     return RedirectToAction("Index", "Home");
-                    //return RedirectToAction(nameof(Index));
                 } else
                 {
                     ViewBag.Message = "Username and/or password are incorrect";
@@ -136,6 +134,7 @@ namespace webChat.Controllers
             var claims = new List<Claim>
             {
                     new Claim(ClaimTypes.Name, user.UserName),
+                     new Claim(ClaimTypes.NameIdentifier, user.UserName),
             };
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);

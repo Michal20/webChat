@@ -75,11 +75,13 @@ app.MapRazorPages();
 app.UseStatusCodePages();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}");
+    pattern: "{controller=Account}/{action=Register}");
 
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<ChatHub>("/ChatHub");
 });
+//
+// app.UseMvcWithDefaultRoute();
 app.Run();

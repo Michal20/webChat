@@ -5,61 +5,120 @@
 
     Layout = "_LayoutChat";
 }
-
- <div class="msg_history">
-     @foreach (var message in Model.Messages)
-     {
-        @if(!@message.sent)
-        {
-            <div class="incoming_msg">
-                <div class="received_msg">
-                    <div class="received_withd_msg">
+<div class="mesgs" id="mesgs">
+     <div class="msg_history contact-@Model.id" id="msg_history">
+         @foreach (var message in Model.Messages)
+         {
+            @if(!@message.sent)
+            {
+                <div class="incoming_msg">
+                    <div class="received_msg">
+                        <div class="received_withd_msg">
+                            <p>@message.content</p>
+                            <span class="time_date"> @message.created</span>
+                        </div>
+                    </div>
+                </div>
+            } else
+            {
+                <div class="outgoing_msg">
+                    <div class="sent_msg">
                         <p>@message.content</p>
                         <span class="time_date"> @message.created</span>
                     </div>
                 </div>
-            </div>
-        } else
-        {
-            <div class="outgoing_msg">
-                <div class="sent_msg">
-                    <p>@message.content</p>
-                    <span class="time_date"> @message.created</span>
-                </div>
-            </div>
+            }
         }
+    </div>
+    <div class="type_msg">
+        <form id="create_message" class="input_msg_write">
+            <input type="hidden" id="contactMessageid" name="contactId" value="@Model.id" />
+            <input type="hidden" id="contactServer" value="@Model.server" />
+            <input type="hidden" id="userMessageid" value="@ViewBag.UserName" />
 
-    }
-</div>
-<!--div class="msg_history" id="Ross_Geller">
-<div class="incoming_msg">
-    <div class="received_msg">
-    <div class="received_withd_msg">
-        <p>check out</p>
-        <span class="time_date"> 08:01 | April 6</span>
-    </div>
+            <input type="text" id="messageContent" name="message" placeholder="Type a message" required/>
+            <button id="msg_send_btn" class="msg_send_btn" type="submit">
+                <i class="fa fa-fw fa-send"></i>
+            </button>
+        </form>
     </div>
 </div>
-<div class="outgoing_msg">
-    <div class="sent_msg">
-    <p>What's up?</p>
-    <span class="time_date"> 14:43 | April 7</span>
-    </div>
-</div>
-</!--div-->
-<div class="type_msg">
-    <form id="create_message" class="input_msg_write">
-        <input type="hidden" id="contactMessageid" name="contactId" value="@Model.id" />
-        <input type="hidden" id="contactServer" value="@Model.server" />
-        <input type="hidden" id="userMessageid" value="@ViewBag.UserName" />
 
-        <input type="text" id="messageContent" name="message" placeholder="Type a message"/>
-        <button class="msg_send_btn" type="submit">
-            <i class="fa fa-fw fa-send"></i>
-        </button>
-    </form>
-</div>
-@section Scripts{
-    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/chat.js"></script>
-}
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+
+<script>
+    $('#msg_history').scrollTop($('#msg_history')[0].scrollHeight);
+     const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/ChatHub")
+        .build();
+    connection.start().catch(err => console.log(err.toString()));
+    connection.on("ReceiveMessage" , (message, senderId) => {
+        var d = new Date();
+        var month = d.getUTCMonth() + 1;
+        var time = d.getUTCDate() + "/" + month + "/" + d.getUTCFullYear() +" " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        const str = '.contact-' + senderId + '#msg_history';
+         $(str).append(
+            `<div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p>`+message+`</p>
+                        <span class="time_date">`+ time +`</span>
+                    </div>
+                </div>
+            </div>`);
+        $(str).scrollTop($(str)[0].scrollHeight);
+        $('#mesgs').scrollTop($('#mesgs')[0].scrollHeight);
+
+    });
+    connection.on("SenderMessage" , (message, contactId) => {
+        const str = '.contact-' + contactId + '#msg_history';
+        var d = new Date();
+        var month = d.getUTCMonth() + 1;
+        var time = d.getUTCDate() + "/" + month + "/" + d.getUTCFullYear() +" " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+       
+        $(str).append(
+            `<div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p>`+message+`</p>
+                    <span class="time_date">`+ time +`</span>
+                </div>
+            </div>`);
+        $(str).scrollTop($(str)[0].scrollHeight);
+        $('#mesgs').scrollTop($('#mesgs')[0].scrollHeight);
+    });
+
+    $('#create_message').submit( async function(e) {
+        e.preventDefault();
+        const Content = document.getElementById("messageContent").value;
+        const contactid = document.getElementById("contactMessageid").value;
+        const userId = document.getElementById("userMessageid").value;
+        const Server = $('#contactServer').val();
+        connection.invoke("SendMessage", Content, userId, contactid).then((result) => {
+        }).catch(err => console.error(err.toString()));
+        try {
+            const response = await fetch('http://'+Server+'/api/transfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ from: userId, to: contactid, content: Content })
+            }).catch((error) => {
+
+            });
+            if (!response.ok) {
+
+            } else {
+                const url = 'http://localhost:5005/api/contacts/' + contactid + '/messages/';
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: Content })
+                })
+                window.location.href = '/' + contactid;
+            }
+        } catch {
+        }
+    });
+</script>

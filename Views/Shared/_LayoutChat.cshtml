@@ -28,9 +28,7 @@
                     </div>
                     <vc:conversation></vc:conversation> 
                 </div>
-                <div class="mesgs">
-                    @RenderBody()
-                </div>
+                @RenderBody()
             </div>
         </div>
     </div>
@@ -40,20 +38,17 @@
         <form id="add-body-form" class="add-body">
             <button type="button" class="close" onclick="closeAddBox()"> X </button>
             <header>Add Contact</header>
-            <span id="ErrorMessage"></span>
+            <span class="text-danger" id="AddErrorMessage"></span>
             <div> 
                 <input type="hidden" id="useridfrom" value="@ViewBag.UserName" />
                 <div class="form-group my-2">
                     <input id="addUserName" name="UserName" type="text" class="form-control" placeholder="Enter username" required/>
-                    <span class="text-danger">@ViewBag.MessageUserName</span>
                 </div>
                 <div class="form-group my-2">
                     <input id="addNickName" name="NickName" type="text" class="form-control" placeholder="Enter nickname" required/>
-                    <span class="text-danger">@ViewBag.MessageNickName</span>
                 </div>
                 <div class="form-group my-2">
                     <input id="addServer" name="Server" type="text" class="form-control" placeholder="Enter Server" required/>
-                    <span class="text-danger">@ViewBag.MessageServer</span>
                 </div>
             </div>
             <footer>
@@ -65,8 +60,49 @@
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/index.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    
+$('#add-body-form').submit(async function (e) {
+    e.preventDefault();
+    $('#add-body-form').validate();
+    const contactid = $('#addUserName').val();
+    const Name = $('#addNickName').val();
+    const Server = $('#addServer').val();
+    const userId = $('#useridfrom').val();
+    const localServer = "localhost:5005";
+
+    try {
+        const response = await fetch('http://' + Server + '/api/invitations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ from: userId, to: contactid, server: localServer })
+        }).catch((error) => {
+            $('#AddErrorMessage').text("Username and/or server not valid");
+        });
+        if (!response.ok) {
+            $('#AddErrorMessage').text("Username not exist");
+        } else {
+            await fetch('http://localhost:5005/api/contacts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: contactid, name: Name, server: Server })
+            });
+            window.location.href = '/' + contactid;
+        }
+    } catch {
+       $('#AddErrorMessage').text("Username and/or server not valid");
+    }
+    
+
+});
+</script>
