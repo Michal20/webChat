@@ -9,6 +9,7 @@ for Register:
 2. http://localhost:5005/Account/Register
 
 for Login:
+
 3. http://localhost:5005/Account/Login
 
 Than you can either register as a new user or log in to your account.
